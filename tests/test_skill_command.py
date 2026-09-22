@@ -121,11 +121,12 @@ class TestSkillCommand(unittest.TestCase):
         readme = (root / "README.md").read_text(encoding="utf-8")
 
         for content in (install_doc, skill, readme):
-            self.assertIn("帮我配 Boss直聘", content)
+            self.assertIn("Set up Boss Zhipin for me", content)
+        self.assertNotIn("帮我配 Boss直聘", readme)
         self.assertIn("agent-reach install --env=local --system --channels=boss", install_doc)
         self.assertIn("--remote-debugging-address=127.0.0.1", install_doc)
-        self.assertIn("用户手动登录", install_doc)
-        self.assertIn("完全控制", install_doc)
+        self.assertIn("the user logs in manually", install_doc)
+        self.assertIn("full control", install_doc)
 
         self.assertIn(
             'auth = AuthManager(Path.home() / ".boss-agent")', career
@@ -135,7 +136,7 @@ class TestSkillCommand(unittest.TestCase):
         self.assertIn("4c991b77086a203173bf08a4cb64a23af6514fe6", career)
         self.assertIn("ENVIRONMENT_RISK", career)
         self.assertIn("--browser-source existing-browser", career)
-        self.assertIn("长期复用", career)
+        self.assertIn("reuse long-term", career)
         self.assertNotIn("code 37（TOKEN_REFRESH_FAILED）→ 重新登录", career)
         self.assertNotIn("client = BossClient(auth", career)
 
@@ -244,7 +245,7 @@ class TestSkillCommand(unittest.TestCase):
             with open(target, encoding="utf-8") as f:
                 content = f.read()
             self.assertTrue(content.strip())
-            self.assertIn("Xiaoyuzhou Podcast, LinkedIn", content)
+            self.assertIn("Xiaoyuzhou podcasts", content)
             self.assertNotIn("搜推特", content)
             self.assertTrue(
                 os.path.exists(os.path.join(skill_parent, "agent-reach", "references"))

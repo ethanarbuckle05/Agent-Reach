@@ -81,27 +81,27 @@ Feel free to open an issue for questions or join discussions.
 
 ---
 
-感谢您对 Agent Reach 的贡献！本文档提供了贡献指南。
+Thank you for contributing to Agent Reach! This document is the contribution guide.
 
-## 快速开始
+## Getting started
 
-1. 在 GitHub 上 fork 仓库
-2. 本地 clone 您的 fork
-3. 创建新分支
-4. 提交更改
-5. 运行测试和 lint
-6. 提交 pull request
+1. Fork the repository on GitHub
+2. Clone your fork locally
+3. Create a new branch
+4. Commit your changes
+5. Run tests and lint
+6. Open a pull request
 
-## 代码规范
+## Code style
 
-- 使用 **ruff** 进行代码检查
-- 使用 **mypy** 进行类型检查
-- 使用 **pytest** 运行测试
+- Use **ruff** for linting
+- Use **mypy** for type checking
+- Use **pytest** to run tests
 
-## 添加新渠道
+## Adding a new channel
 
-1. 在 `agent_reach/channels/` 创建新文件
-2. 实现渠道接口
-3. 添加测试
-4. 更新 doctor 检测
-5. 更新文档
+1. Create a new file in `agent_reach/channels/`
+2. Implement the channel interface
+3. Add tests
+4. Update the doctor checks
+5. Update the documentation

@@ -1,46 +1,43 @@
-# 金融行情
+# Market data
 
-雪球股票行情、搜索与热门内容。行情可能延迟，不构成投资建议。
+Xueqiu stock quotes, search, and trending content. Quotes may be delayed and are not investment advice.
 
-## 先检查状态
+## Check status first
 
 ```bash
 agent-reach doctor --json
 ```
 
-`xueqiu.active_backend` 有值时按该后端使用；值为 `null` 只表示 Doctor 没有完成
-实时内容验证。雪球需要已登录会话或最小 Cookie，不能把 HTTP 400 当成股票不存在。
+When `xueqiu.active_backend` is populated, use that backend. A value of `null` only means Doctor did not finish a live content check. Xueqiu needs a logged-in session or a minimal cookie set. Do not treat HTTP 400 as "this stock does not exist".
 
-## OpenCLI（桌面已有 Chrome 登录态时优先）
+## OpenCLI (prefer this when desktop Chrome already has a login session)
 
 ```bash
-# 验证当前登录态
+# Verify the current login state
 opencli xueqiu whoami -f yaml
 
-# 股票搜索与实时行情
-opencli xueqiu search "英伟达" -f yaml
+# Stock search and live quotes
+opencli xueqiu search "NVIDIA" -f yaml
 opencli xueqiu stock NVDA -f yaml
 
-# 热门内容与热门股票
+# Trending posts and trending stocks
 opencli xueqiu hot -f yaml
 opencli xueqiu hot-stock -f yaml
 
-# 查看全部只读命令
+# List every read-only command
 opencli xueqiu --help
 ```
 
-OpenCLI 只复用用户已经存在且明确控制的浏览器会话。不要自动执行
-`opencli xueqiu login`；没有现成登录态时，让用户先在 Chrome 登录，或显式导入
-雪球所需的最小 Cookie：
+OpenCLI only reuses a browser session the user already has and explicitly controls. Do not run `opencli xueqiu login` automatically. If there is no existing login session, have the user log in with Chrome first, or explicitly import the minimal cookies Xueqiu needs:
 
 ```bash
 agent-reach configure --from-browser chrome --platform xueqiu
 ```
 
-该配置只读取并保存 `xq_a_token`，不会顺带采集其他平台 Cookie。
+That configuration reads and saves only `xq_a_token`. It does not collect cookies for other platforms along the way.
 
-## 验收与失败处理
+## Acceptance and failure handling
 
-- 以返回股票名称、代码、价格或非空内容列表为成功；退出码 0 但字段为空不算成功。
-- HTTP 400 通常是会话/Cookie 问题，不表示股票代码不存在。
-- `whoami` 成功而 `stock`/`hot` 失败时，按适配器解析或平台接口问题报告，不要误诊成未登录。
+- Success means the response includes a stock name, symbol, price, or a non-empty content list. Exit code 0 with empty fields is not success.
+- HTTP 400 is usually a session or cookie problem. It does not mean the ticker is missing.
+- If `whoami` succeeds and `stock` or `hot` fails, report it as an adapter parse issue or a platform API issue. Do not misdiagnose it as logged out.

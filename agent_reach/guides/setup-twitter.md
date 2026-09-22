@@ -1,53 +1,55 @@
-# Twitter 高级功能配置指南（twitter-cli）
+# Twitter advanced features setup guide (twitter-cli)
 
-Twitter 基础阅读通过 Jina Reader 免费可用，无需配置。
+Basic Twitter reading is free through Jina Reader and needs no setup.
 
-高级功能需要 twitter-cli（@public-clis/twitter-cli）：
+Advanced features need twitter-cli (@public-clis/twitter-cli):
 
-- 搜索推文（`twitter search`）
-- 读取完整推文和对话链（`twitter tweet`、`twitter thread`）
-- 用户时间线（`twitter timeline`）
-- 长文阅读（`twitter article`）
+- Search tweets (`twitter search`)
+- Read a full tweet and its conversation (`twitter tweet`, `twitter thread`)
+- User timeline (`twitter timeline`)
+- Long-form reading (`twitter article`)
 
-twitter-cli 是免费开源工具（pipx 安装），但需要你的 Twitter 账号 cookie。
+twitter-cli is a free open-source tool (install with pipx), but it needs your Twitter account cookies.
 
-## 快速配置
+## Quick setup
 
-1. 检查 twitter-cli 是否安装：
+1. Check whether twitter-cli is installed:
 
 ```bash
 which twitter && echo "installed" || echo "not installed"
 ```
 
-2. 安装 twitter-cli：
+2. Install twitter-cli:
 
 ```bash
 pipx install twitter-cli
 ```
 
-3. 确认命令已安装（此时不做认证请求）：
+3. Confirm the command is installed (no auth request at this step):
 
 ```bash
 twitter --help
 ```
 
-## 获取 Cookie（Cookie-Editor 方式，推荐）
+## Get cookies (Cookie-Editor, recommended)
 
-1. 安装 [Cookie-Editor](https://cookie-editor.com/) 浏览器扩展
-2. 登录 x.com
-3. 点击 Cookie-Editor 图标 → Export → Header String
-4. 运行配置命令：
+1. Install the [Cookie-Editor](https://cookie-editor.com/) browser extension
+2. Log in to x.com
+3. Click the Cookie-Editor icon → Export → Header String
+4. Run the configure command:
 
 ```bash
 agent-reach configure twitter-cookies
 ```
 
-这会提取 `auth_token` 和 `ct0`，安全保存到
-`~/.agent-reach/config.yaml`，供 `agent-reach doctor` 检查显式凭据是否齐全。
-`doctor` 不会执行 `twitter status`，不会实时验证账号是否可用，也不会修改当前 Shell。
+This extracts `auth_token` and `ct0` and stores them safely in
+`~/.agent-reach/config.yaml` so `agent-reach doctor` can check that explicit
+credentials are present. `doctor` does not run `twitter status`, does not
+live-check whether the account works, and does not modify the current shell.
 
-默认只写 `~/.agent-reach/config.yaml`。只有用户明确同意复制凭据并显式增加
-`--sync-legacy-twitter` 时，才会额外写入：
+By default it writes only `~/.agent-reach/config.yaml`. It writes the extra
+copies below only when the user explicitly agrees to copy credentials and
+passes `--sync-legacy-twitter`:
 
 - `~/.config/xfetch/session.json`
 - `~/.config/bird/credentials.env`
@@ -56,35 +58,38 @@ agent-reach configure twitter-cookies
 agent-reach configure twitter-cookies --sync-legacy-twitter
 ```
 
-`agent-reach uninstall` 只会提醒这些 legacy 副本，不会自动删除。需要清理时，
-先让用户确认，再手工删除上述两个文件。
+`agent-reach uninstall` only reminds you about these legacy copies. It does
+not delete them automatically. To clean them up, confirm with the user first,
+then delete those two files by hand.
 
-`twitter` 是独立的上游命令，不会读取 Agent Reach 的配置文件。直接运行
-`twitter status/search/read/...` 时，必须按下节在当前 Shell 或子进程环境中
-显式设置 `TWITTER_AUTH_TOKEN` 和 `TWITTER_CT0`。不要依赖自动读取浏览器 Cookie。
+`twitter` is an independent upstream command and does not read Agent Reach's
+config file. When you run `twitter status/search/read/...` directly, you must
+explicitly set `TWITTER_AUTH_TOKEN` and `TWITTER_CT0` in the current shell or
+in the child-process environment, as the next section describes. Do not rely
+on automatic browser-cookie reads.
 
-## 手动设置 Cookie
+## Set cookies manually
 
-如果你已经知道 `auth_token` 和 `ct0`：
+If you already know `auth_token` and `ct0`:
 
-1. 安装 twitter-cli（如果没装）：`pipx install twitter-cli`
+1. Install twitter-cli if it is missing: `pipx install twitter-cli`
 
-2. 设置环境变量：
+2. Set the environment variables:
 
 ```bash
-export TWITTER_AUTH_TOKEN="你的auth_token"
-export TWITTER_CT0="你的ct0"
+export TWITTER_AUTH_TOKEN="your_auth_token"
+export TWITTER_CT0="your_ct0"
 ```
 
-3. 测试：
+3. Test:
 
 ```bash
 twitter search "test" -n 1
 ```
 
-## 代理配置
+## Proxy setup
 
-> twitter-cli 支持通过环境变量设置代理：
+> twitter-cli can use a proxy through environment variables:
 
 ```bash
 export HTTP_PROXY="http://user:pass@host:port"
@@ -92,12 +97,12 @@ export HTTPS_PROXY="http://user:pass@host:port"
 twitter search "test" -n 1
 ```
 
-也可以使用全局代理工具：
+You can also use a global proxy tool:
 
 ```bash
 proxychains twitter search "test" -n 1
 ```
 
-## Fallback：bird CLI
+## Fallback: bird CLI
 
-如果你已经安装了 [bird CLI](https://www.npmjs.com/package/@steipete/bird)（`npm install -g @steipete/bird`），它也能正常工作。Agent Reach 会自动检测并使用已安装的 bird。两者功能类似，twitter-cli 是当前推荐方案。
+If you already have [bird CLI](https://www.npmjs.com/package/@steipete/bird) installed (`npm install -g @steipete/bird`), it still works. Agent Reach detects an installed bird and uses it. The two tools are similar. twitter-cli is the current recommendation.

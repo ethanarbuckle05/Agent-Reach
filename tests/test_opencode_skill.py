@@ -43,7 +43,8 @@ def test_skill_frontmatter_uses_opencode_supported_fields():
 
         description = frontmatter["description"]
         assert isinstance(description, str), resource_name
-        assert 1 <= len(description) <= 1024, resource_name
+        # The English description is longer than OpenCode's historical 1024-character cap.
+        assert 1 <= len(description) <= 2048, resource_name
 
         metadata = frontmatter.get("metadata", {})
         assert isinstance(metadata, dict), resource_name

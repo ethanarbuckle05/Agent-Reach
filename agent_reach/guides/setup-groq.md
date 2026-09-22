@@ -1,47 +1,47 @@
-# Groq Whisper 配置指南
+# Groq Whisper setup guide
 
-## 功能说明
-当 YouTube/Bilibili 视频没有字幕时，用 Groq 的 Whisper API 进行语音转文字。Groq 提供免费额度。
+## What it does
+When a YouTube or Bilibili video has no subtitles, use Groq's Whisper API for speech-to-text. Groq includes a free quota.
 
-## Agent 可自动完成的步骤
+## Steps the agent can do
 
-1. 检查是否已配置：
+1. Check whether it is already configured:
 ```bash
 agent-reach doctor | grep -i "groq\|whisper"
 ```
 
-2. 如果用户提供了 key，写入配置：
+2. If the user provided a key, write it into config:
 ```python
 from agent_reach.config import Config
 c = Config()
-c.set("groq_api_key", "用户提供的KEY")
+c.set("groq_api_key", "USER_PROVIDED_KEY")
 ```
 
-3. 测试（可选）：
+3. Optional test:
 ```bash
 curl -s https://api.groq.com/openai/v1/models \
-  -H "Authorization: Bearer 用户提供的KEY" \
+  -H "Authorization: Bearer USER_PROVIDED_KEY" \
   -o /dev/null -w "%{http_code}"
 ```
-返回 200 = 可用
+A 200 response means it works.
 
-## 需要用户手动做的步骤
+## Steps the user must do by hand
 
-请告诉用户：
+Tell the user:
 
-> 视频语音转文字需要一个 Groq API Key（免费）。
+> Speech-to-text for videos needs a Groq API key (free).
 >
-> 步骤：
-> 1. 打开 https://console.groq.com
-> 2. 用 Google 账号或邮箱注册
-> 3. 点击左侧 "API Keys"
-> 4. 点击 "Create API Key"
-> 5. 复制生成的 Key，发给我
+> Steps:
+> 1. Open https://console.groq.com
+> 2. Sign up with a Google account or email
+> 3. Click "API Keys" on the left
+> 4. Click "Create API Key"
+> 5. Copy the generated key and send it to me
 >
-> Groq 提供免费额度，日常使用完全够用。
+> Groq includes a free quota, which is enough for everyday use.
 
-## Agent 收到 key 后的操作
+## After the agent receives the key
 
-1. 写入配置：`config.set("groq_api_key", key)`
-2. 测试 API 可用性
-3. 反馈："✅ 语音转文字已开启！现在遇到没有字幕的视频，我也能帮你提取内容了。"
+1. Write it into config: `config.set("groq_api_key", key)`
+2. Test that the API is usable
+3. Reply: "Speech-to-text is on. When a video has no subtitles, I can still extract the content for you."
